@@ -4,6 +4,10 @@ The goal of this game is to help classrooms full of students learn and practice 
 
 The game starts by asking which team will go first: 'X' or 'O'. From there, the chosen team will choose a spot just like regular tic-tac-toe and work together to find the answer. Once they get an answer, that team will take that spot on the board and play moves to the other team as usual.
 
+# How to Play
+
+Starting up the game is easy: just download the code and open `tic-tac-toe.html` in a browser!
+
 # How to customize
 
 Questions and answers are stored in the `questions.js` file at this project root. This is the only file you need to edit! To enter new math problems, simply change the current questions for each round. Each round has 9 questions and 9 corresponding answers where the answer to each question is listed in the same position in the `answers` object as the question in the `questions` object
