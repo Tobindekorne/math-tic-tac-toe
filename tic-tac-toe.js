@@ -1,20 +1,22 @@
 //Author: Tobin deKorne
 //Date: 2/10/18
-import { getQuestions, getAnswers } from './round1/questions.js';
+import { getQuestions, getAnswers, getNumberOfRounds } from './questions.js';
 const buttons = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 let currentPlayer;
+let questions_array = [];
+let answers_array = [];
+let round = 1;
 
 const setupGame = () => {
     const game = document.createElement('div');
     $('.container').append(game); // Add the game board to the container
     $(game).addClass('game');
     addGameStatus();
-    // addGameButtons();
-    addRoundButtons(1);
+    addGameButtons();
     addResetButton();
+    addNextRoundButton();
 
     $('.choice').click((e) => {
-        console.log(e);
         choiceHandler(e.currentTarget);
     });
 };
@@ -32,51 +34,8 @@ const addGameStatus = () => {
 };
 
 const addGameButtons = () => {
-    const row1 = document.createElement('div');
-    const row2 = document.createElement('div');
-    const row3 = document.createElement('div');
-    $(row1).addClass('row row1');
-    $(row2).addClass('row row2');
-    $(row3).addClass('row row3');
-    $('.game').append(row1, row2, row3); // add to the container on the html page
+    loadQuestionsAndAnswers();
 
-    //this next block of code generates the 12 buttons from the buttons array
-    buttons.forEach(function (btn) {
-        const newDiv = document.createElement('div'); //create a div to hold the button
-        const newBtn = document.createElement('button'); //create the button itself
-        $(newBtn).attr('id', btn); //add a numbered id for reference when we need to refer to a particular button
-        $(newBtn).addClass('btn btn-primary btn-lg col-11 choice'); //add Bootstrap classes to the buttons for style
-        $(newDiv).addClass('col-4'); //add some Bootstrap classes to the container for layout purposes
-        newBtn.append(document.createTextNode(btn)); //add the button text to the button
-        newDiv.append(newBtn); //add the button to the div container
-        const row = Math.ceil(btn / 3); // Find the appropriate row for this button
-
-        // Add the button to the appropriate row
-        if (row === 1) {
-            row1.append(newDiv);
-        } else if (row === 2) {
-            row2.append(newDiv);
-        } else if (row === 3) {
-            row3.append(newDiv);
-        }
-    });
-};
-
-const addRoundButtons = (roundNumber) => {
-    const questions = getQuestions(roundNumber);
-    const answers = getAnswers(roundNumber);
-    // console.log(questions);
-    // console.log(answers);
-    // questions.forEach((question) => {
-    //     const p = document.createElement('p');
-    //     p.innerHTML = question;
-    //     $('.container').append(p);
-    // });
-    // answers.forEach((answer) => {
-    //     const p = document.createElement('p');
-    //     p.innerHTML = answer;
-    //     $('.container').append(p);
-    // });
     const row1 = document.createElement('div');
     const row2 = document.createElement('div');
     const row3 = document.createElement('div');
@@ -111,11 +70,39 @@ const addResetButton = () => {
     const restartDiv = document.createElement('div');
     const restartButton = document.createElement('button');
     $(restartButton)
-        .append(document.createTextNode('Replay'))
-        .addClass('btn btn-primary btn-lg col-11');
+        .append(document.createTextNode('Restart'))
+        .addClass('btn btn-primary btn-lg col-11 restart-button');
     $(restartDiv).append(restartButton).addClass('restart').hide();
     $('.game').append(restartDiv).hide(); // Hide the game until a start player has been chosen
     $('.restart').click(() => location.reload());
+};
+
+const addNextRoundButton = () => {
+    const nextRoundtDiv = document.createElement('div');
+    const nextRoundtButton = document.createElement('button');
+    $(nextRoundtButton)
+        .append(document.createTextNode('Next Round >>'))
+        .addClass('btn btn-primary btn-lg col-11 next-round-button');
+    $(nextRoundtDiv).append(nextRoundtButton).addClass('next-round').hide();
+    $('.game').append(nextRoundtDiv).hide(); // Hide the game until a start player has been chosen
+    $('.next-round').click(() => loadNextRound());
+};
+
+const loadNextRound = () => {
+    round++;
+    $('.game').remove();
+    const game = document.createElement('div');
+    console.log(round, game);
+    $('.container').append(game); // Add the game board to the container
+    $(game).addClass('game');
+    addGameStatus();
+    addGameButtons();
+    addResetButton();
+    addNextRoundButton();
+    $('.choice').click((e) => {
+        choiceHandler(e.currentTarget);
+    });
+    $('.game').show();
 };
 
 const askToStart = () => {
@@ -159,8 +146,24 @@ const startGame = () => {
     $('.game-status-text').text(`It's team ${currentPlayer}'s turn!`);
 };
 
+const loadQuestionsAndAnswers = () => {
+    questions_array = [];
+    answers_array = [];
+    const questions = getQuestions(round);
+    const answers = getAnswers(round);
+    questions.forEach((question) => {
+        const p = document.createElement('p');
+        p.innerHTML = question;
+        questions_array.push(p);
+    });
+    answers.forEach((answer) => {
+        const p = document.createElement('p');
+        p.innerHTML = answer;
+        answers_array.push(p);
+    });
+};
+
 const choiceHandler = (button) => {
-    console.log('running choice handler');
     const id = $(button).attr('id');
     buttons.forEach((btn) => {
         if ($(`#${btn}`).attr('id') !== id) {
@@ -171,41 +174,30 @@ const choiceHandler = (button) => {
     $(button).parent().addClass('w-100');
     $(button).parent().addClass('fill');
     $(button).parent().parent().addClass('fill');
-
     $(button)
         .removeClass('btn-primary')
         .addClass('question')
         .removeClass('choice'); //change color
-    const question = document.createElement('img');
-    $(question).attr(
-        'src',
-        `./images/question${Number($(button).attr('id'))}.PNG`
-    );
-    $(question).addClass('question-image');
-    $(button).html(question);
+    $(button).html(questions_array[id - 1]);
 
     $('.question').click((e) => {
-        console.log(e.target);
         questionHandler(e.currentTarget);
     });
+    MathJax.typeset();
 };
 
 const questionHandler = (button) => {
-    console.log(button);
-    console.log($(button).attr('id'));
+    const id = $(button).attr('id');
     $(button)
         .removeClass('btn-danger')
         .addClass('answer')
         .removeClass('question'); //change color
-    const answer = document.createElement('img');
-    $(answer).attr('src', `./images/answer${Number($(button).attr('id'))}.PNG`);
-    $(answer).addClass('answer-image');
-    $(button).html(answer);
+    $(button).html(answers_array[id - 1]);
 
     $('.answer').click((e) => {
-        console.log(e.target);
         answerHandler(e.currentTarget);
     });
+    MathJax.typeset();
 };
 
 const answerHandler = (button) => {
@@ -228,6 +220,7 @@ const answerHandler = (button) => {
 };
 
 const checkWin = () => {
+    let noWinner = true;
     const one = $('#1');
     const two = $('#2');
     const three = $('#3');
@@ -238,7 +231,7 @@ const checkWin = () => {
     const eight = $('#8');
     const nine = $('#9');
 
-    winningCombos = [
+    const winningCombos = [
         [one, two, three],
         [one, four, seven],
         [one, five, nine],
@@ -253,10 +246,13 @@ const checkWin = () => {
         const first = combo[0].text();
         const second = combo[1].text();
         const third = combo[2].text();
-        if (first === second && second === third) setGameWon(combo);
+        if (first === second && second === third) {
+            setGameWon(combo);
+            noWinner = false;
+        }
     });
 
-    checkTie();
+    noWinner && checkTie();
 };
 
 const checkTie = () => {
@@ -274,8 +270,13 @@ const setGameWon = (winner) => {
     $('button').prop('disabled', true);
     $('.game-status-text').text(`Team ${winner[0].text()} won this round!`);
     $('.game-status-text').addClass(`badge badge-success even-larger-badge`);
-    $('.restart .btn').prop('disabled', false);
-    $('.restart').show();
+    if (round < getNumberOfRounds()) {
+        $('.next-round .btn').prop('disabled', false);
+        $('.next-round').show();
+    } else {
+        $('.restart .btn').prop('disabled', false);
+        $('.restart').show();
+    }
 };
 
 const setGameTie = () => {
