@@ -2,9 +2,9 @@
 
 The goal of this game is to help classrooms full of students learn and practice math together by splitting into two teams and working together with their team to find answers.
 
-The game starts by asking which team will go first: 'X' or 'O'. From there, the chosen team will choose a spot just like regular tic-tac-toe and work together to find the answer. Once they get an answer, that team will take that spot on the board and play moves to the other team as usual.
+The game starts by asking which team will go first: 'X' or 'O'. From there, the chosen team will choose a spot just like regular tic-tac-toe. Click the chosen square and that team will be given their question. They will need to work together to find the answer. Once they get an answer, click the question and it will reveal the answer. After going over the answer with the class, click the answer and the view will return to the board with the team's mark on the spot they chose. From there, play moves to the other team as usual.
 
-# How to Play
+# How to Start the Game
 
 Starting up the game is easy: just download the code and open `tic-tac-toe.html` in a browser!
 
