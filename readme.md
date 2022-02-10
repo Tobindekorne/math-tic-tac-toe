@@ -39,3 +39,5 @@ if you would like more rounds than the 2 provided in the base example given, sim
 # Improvement Ideas
 
 Something that could be improved here is to allow for one team to steal the space from the other team upon an incorrect answer submission. For example, if team X picks the center square and submits an incorrect answer, then team O can try to provide an answer to steal the space allowing team X to pick another space and try again.
+
+Another improvement would be to keep track of score across rounds to go for something like a best 2 out of 3 type of deal.
