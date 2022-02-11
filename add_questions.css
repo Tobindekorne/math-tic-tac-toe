@@ -1,0 +1,28 @@
+.form-control {
+    background-color: #222;
+    color: #fff;
+}
+
+.form-control:focus {
+    background-color: #111;
+    color: #fff;
+}
+
+.question,
+.answer {
+    font-size: 1.3rem;
+    max-height: 65px;
+}
+
+.preview-button > svg {
+    height: 2rem;
+    fill: #fff !important;
+}
+
+.format-btn {
+    margin-right: 1rem;
+}
+
+p {
+    margin: 0;
+}
